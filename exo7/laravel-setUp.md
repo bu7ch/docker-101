@@ -120,7 +120,8 @@ FROM php:8.2-fpm-alpine
 
 RUN apk update && apk add --no-cache \
     git curl libpng-dev libxml2-dev \
-    zip unzip oniguruma-dev nodejs npm
+    zip unzip oniguruma-dev nodejs npm \
+    mariadb-dev linux-headers
 
 RUN docker-php-ext-install \
     pdo_mysql mbstring exif pcntl \
@@ -132,6 +133,7 @@ RUN adduser -D -u 1000 laravel
 USER laravel
 
 WORKDIR /var/www/html
+
 ```
 
 4. **Créer `nginx/default.conf`**
