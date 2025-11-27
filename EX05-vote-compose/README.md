@@ -14,6 +14,42 @@ vote/
   templates/index.html
 docker-compose.yml
 ```
+=> app.py
+```python
+from flask import Flask, request, render_template
+import redis, os
+r = redis.Redis(host=os.getenv("REDIS_HOST","redis"), decode_responses=True)
+app = Flask(__name__)
+
+@app.route("/", methods=["GET","POST"])
+def index():
+    if request.method == "POST":
+        vote = request.form.get("vote")
+        if vote == "a": r.incr("votes_a")
+        if vote == "b": r.incr("votes_b")
+    va = int(r.get("votes_a") or 0)
+    vb = int(r.get("votes_b") or 0)
+    return render_template("index.html", a=va, b=vb)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+=> index.html
+```html
+<!doctype html>
+<html><body>
+<h1>Vote A ou B</h1>
+<form method="post">
+  <button name="vote" value="a">A</button>
+  <button name="vote" value="b">B</button>
+</form>
+<p>A : {{ a }} — B : {{ b }}</p>
+</body></html>
+```
+=> requirement.txt
+```bash
+flask==3.0.2
+redis==5.0.1
+```
 
 docker-compose.yml (minimal)
 ```yaml
