@@ -66,6 +66,22 @@ services:
     depends_on:
       - redis
 ```
+=> dockerfile
+```bash
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
 
 Étapes
 1. Place-toi à la racine du dossier `ex05-vote-compose`.
